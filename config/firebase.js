@@ -1,0 +1,55 @@
+const admin = require('firebase-admin');
+// const serviceAccount = require('../service-account.json');
+
+
+// Initialize Firebase Admin
+const serviceAccount = {
+  type: "service_account",
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_PRIVATE_KEY,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_CLIENT_ID,
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
+};
+
+// ✅ FIX: Check if already initialized
+let auth, firestore;
+
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+try {
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: `https://${process.env.FIREBASE_PROJECT_ID}.firebaseio.com`
+    });
+    console.log('✅ Firebase Admin initialized successfully');
+  } else {
+    admin.app(); // Use existing app
+    console.log('✅ Firebase Admin already initialized');
+  }
+
+  // ✅ Initialize services AFTER app is initialized   
+  
+  auth = admin.auth();
+  firestore = admin.firestore();
+  
+  console.log('✅ Firebase Auth initialized:', !!auth);
+  console.log('✅ Firestore initialized:', !!firestore);
+
+} catch (error) {
+  console.error('❌ Firebase Admin initialization error:', error);
+  // Set to null to avoid undefined errors
+  auth = null;
+  firestore = null;
+}
+
+// ✅ Export even if initialization failed (but as null)
+module.exports = { admin, auth, firestore };
