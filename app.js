@@ -18,6 +18,7 @@ const app = express();
 app.use(helmet());
 const allowedOrigins = [
   "https://telth.ai",
+  "https://accounts.google.com/o/oauth2/auth",
 ];
 // CORS configuration
 app.use(cors({
