@@ -5,11 +5,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendOrderConfirmationEmail = async (orderData) => {
   try {
     console.log('📧 Preparing order email for:', orderData.email);
-    
+
     const emailHtml = createOrderEmailHTML(orderData);
-    
+
     const { data, error } = await resend.emails.send({
-    from: 'Medical Hub <contact@mytelth.com>',
+      from: 'Medical Hub <info@mytelth.com>',
       to: orderData.email,
       subject: `Order Confirmation - ${orderData.category} Medical Hub`,
       html: emailHtml,
@@ -22,7 +22,7 @@ const sendOrderConfirmationEmail = async (orderData) => {
 
     console.log('✅ Email sent via Resend');
     return data;
-    
+
   } catch (error) {
     console.error('Email service error:', error);
     throw error;
@@ -32,7 +32,7 @@ const sendOrderConfirmationEmail = async (orderData) => {
 // Create beautiful HTML email              
 const createOrderEmailHTML = (orderData) => {
   const { name, category, selectedColor, hubs, selectedDevices, orderId } = orderData;
-  
+
   return `
 <!DOCTYPE html>
 <html>
@@ -140,7 +140,7 @@ const createOrderEmailHTML = (orderData) => {
         <div class="footer">
             <p><strong>Medical AI Hub</strong></p>
             <p>Transforming Healthcare with Advanced Technology</p>
-            <p>📞 Support: +91-XXXXX-XXXXX | ✉️ support@medicalaihub.com</p>
+            <p>📞 Support: 1800-570-0140 | ✉️ info@mytelth.com</p>
             <p>Thank you for choosing us for your healthcare needs!</p>
         </div>
     </div>
@@ -152,9 +152,9 @@ const createOrderEmailHTML = (orderData) => {
 // Create hub sections HTML
 const createHubSectionsHTML = (hubs) => {
   if (!hubs) return '';
-  
+
   let html = '';
-  
+
   Object.entries(hubs).forEach(([hubId, hubConfig]) => {
     if (hubConfig.selectedAddons && hubConfig.selectedAddons.length > 0) {
       html += `
@@ -168,26 +168,26 @@ const createHubSectionsHTML = (hubs) => {
               </div>
             `).join('')}
             
-            ${Object.entries(hubConfig.careplanQuantities || {}).map(([careplanId, qty]) => 
-              qty > 0 ? `
+            ${Object.entries(hubConfig.careplanQuantities || {}).map(([careplanId, qty]) =>
+        qty > 0 ? `
                 <div class="device-item">
                   <strong>${careplanId}</strong> - ${qty} unit(s)
                 </div>
               ` : ''
-            ).join('')}
+      ).join('')}
           </div>
         </div>
       `;
     }
   });
-  
+
   return html;
 };
 
 // Create selected devices HTML
 const createSelectedDevicesHTML = (selectedDevices) => {
   if (!selectedDevices || selectedDevices.length === 0) return '';
-  
+
   return `
     <div class="section">
       <h2>🎯 Selected Medical Devices</h2>
@@ -213,9 +213,9 @@ module.exports = {
 const sendInternalContactNotification = async (contactData) => {
   try {
     console.log('📧 Preparing internal contact notification...');
-    
+
     const emailHtml = createInternalContactEmailHTML(contactData);
-    
+
     const { data, error } = await resend.emails.send({
       from: 'Medical AI Contact <contact@mytelth.com>',
       to: 'kabilan@mytelth.com', // Your company email
@@ -230,7 +230,7 @@ const sendInternalContactNotification = async (contactData) => {
 
     console.log('✅ Internal contact notification sent');
     return data;
-    
+
   } catch (error) {
     console.error('Internal contact email error:', error);
     throw error;
@@ -241,9 +241,9 @@ const sendInternalContactNotification = async (contactData) => {
 const sendContactConfirmationEmail = async (contactData) => {
   try {
     console.log('📧 Preparing customer confirmation email...');
-    
+
     const emailHtml = createContactConfirmationEmailHTML(contactData);
-    
+
     const { data, error } = await resend.emails.send({
       from: 'Medical Hub <contact@mytelth.com>',
       to: contactData.email,
@@ -258,7 +258,7 @@ const sendContactConfirmationEmail = async (contactData) => {
 
     console.log('✅ Contact confirmation email sent to customer');
     return data;
-    
+
   } catch (error) {
     console.error('Confirmation email error:', error);
     throw error;
@@ -268,7 +268,7 @@ const sendContactConfirmationEmail = async (contactData) => {
 // HTML template for internal notification
 const createInternalContactEmailHTML = (contactData) => {
   const { name, email, company, message, contactId } = contactData;
-  
+
   return `
 <!DOCTYPE html>
 <html>
@@ -393,7 +393,7 @@ const createInternalContactEmailHTML = (contactData) => {
             <div class="section">
                 <h2>🚀 Action Required</h2>
                 <p>Please follow up with this contact within 24 hours.</p>
-                <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                <p><strong>Email:</strong> <a href="mailto:${email}">info@mytelth.com</a></p>
             </div>
         </div>
 
@@ -411,7 +411,7 @@ const createInternalContactEmailHTML = (contactData) => {
 // HTML template for customer confirmation
 const createContactConfirmationEmailHTML = (contactData) => {
   const { name, contactId } = contactData;
-  
+
   return `
 <!DOCTYPE html>
 <html>
@@ -540,17 +540,20 @@ const createContactConfirmationEmailHTML = (contactData) => {
             <div class="section">
                 <h2>💼 Need Immediate Assistance?</h2>
                 <p>If you have urgent questions, feel free to contact us directly:</p>
-                <p>📞 <strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p>✉️ <strong>Email:</strong> contact@medaisolutions.com</p>
-                <p>🕒 <strong>Business Hours:</strong> Mon-Fri 9am-6pm EST</p>
+                <p>📞 <strong>Phone:</strong> 1800-570-0140</p>
+                <p>✉️ <strong>Email:</strong> info@mytelth.com</p>
             </div>
         </div>
 
         <div class="footer">
             <p><strong>Medical AI Solutions</strong></p>
             <p>Transforming Healthcare with Advanced AI Technology</p>
-            <p>123 Medical AI Drive, Healthcare City, HC 12345</p>
-            <p>🔗 <a href="https://medaisolutions.com">Visit our website</a></p>
+            <p>The Chambers Vardhaman
+Trade Center, 3 rd
+Floor, Nehru Place,
+New Delhi 110019, India
+1800-570-0140</p>
+            <p>🔗 <a href="https://mytelth.com">Visit our website</a></p>
         </div>
     </div>
 </body>
