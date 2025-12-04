@@ -12,7 +12,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   Logger.info(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   // Log important info
-  Logger.info(`Firebase Project: ${process.env.FIREBASE_PROJECT_ID || 'Not configured'}`);
+  Logger.info(`Firebase Project: ${ process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') || 'Not configured'}`);
   Logger.info(`Freshdesk Domain: ${process.env.FRESHDESK_DOMAIN || 'Not configured'}`);
 });
 
